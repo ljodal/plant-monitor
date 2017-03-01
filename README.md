@@ -3,6 +3,23 @@
 A web based API to collect and aggregate metrics from plants
 
 
+## Running with `docker-compose`
+
+Build and start the containers:
+
+```shell
+docker-compose up --build
+```
+
+Run migrations (in another shell) after the database has started:
+
+```shell
+docker-compose run --rm web rake sequel:migrate
+```
+
+Everything should now be available on port `5000` on your machine.
+
+
 ## Requirements
 
  * Ruby >= 2.0.0
@@ -71,6 +88,5 @@ curl -u admin:secret http://localhost:4567/api/temperature/1
 
 ## TODO
 
- * `docker-compose` setup
  * Configurable username/password
  * Frontend

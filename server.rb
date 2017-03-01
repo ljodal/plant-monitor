@@ -4,23 +4,43 @@ require 'sequel'
 
 require 'sinatra/reloader' if development?
 
+puts ENV['DB_HOST']
 
-DB = Sequel.connect(adapter: 'postgres',
-                    dbname: 'pipeline',
-                    user: 'pipeline',
-                    host: 'localhost',
-                    port: 5432,
-                    password: 'pipeline')
-
-
-prepared_statements = {
-  temperature_readings: :insert_temp,
-  moisture_readings: :insert_moisture,
-  light_readings: :insert_light,
+db_config = {
+  adapter: 'postgres',
+  dbname: ENV.fetch('DB_NAME', 'pipeline'),
+  user: ENV.fetch('DB_USER', 'pipeline'),
+  host: ENV.fetch('DB_HOST', 'localhost'),
+  port: ENV.fetch('DB_PORT', 5432),
+  password: ENV.fetch('DB_PASS', 'pipeline'),
 }
 
-prepared_statements.each do |table, name|
-  DB[table].prepare(:insert, name, plant_id: :$plant_id, value: :$value)
+
+DB = Sequel.connect(db_config)
+
+
+# Variable to keep track of whether we have already
+# prepared the insert statements or not
+$has_prepared = false
+
+##
+# Prepare our insert statements
+#
+def prepare
+  # Only do this once
+  return if $has_prepared
+
+  prepared_statements = {
+    temperature_readings: :insert_temp,
+    moisture_readings: :insert_moisture,
+    light_readings: :insert_light,
+  }
+
+  prepared_statements.each do |table, name|
+    DB[table].prepare(:insert, name, plant_id: :$plant_id, value: :$value)
+  end
+
+  $has_prepared = true
 end
 
 
@@ -35,6 +55,9 @@ end
 # Helper method execute the prepared statements
 #
 def insert(objects)
+  # Make sure the prepared statements are ready
+  prepare unless $has_prepared
+
   objects.map do |o|
     params = {
       plant_id: o['id'],

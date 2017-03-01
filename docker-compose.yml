@@ -1,0 +1,18 @@
+version: '3'
+services:
+    db:
+        image: pipelinedb/pipelinedb
+        #volumes:
+        #    - data:/mnt/pipelinedb/data
+    web:
+        build: .
+        #command: ['bundle', 'exec', 'ruby', 'server.rb']
+        command: ['bundle', 'exec', 'rackup', '--host', '0.0.0.0', '-p', '5000']
+        links:
+            - db
+        ports:
+            - 5000:5000
+        volumes:
+            - .:/app
+        environment:
+            DB_HOST: 'db'
