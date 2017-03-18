@@ -1,22 +1,8 @@
 require 'sinatra'
 require 'json'
-require 'sequel'
 
-require 'sinatra/reloader' if development?
-
-puts ENV['DB_HOST']
-
-db_config = {
-  adapter: 'postgres',
-  dbname: ENV.fetch('DB_NAME', 'pipeline'),
-  user: ENV.fetch('DB_USER', 'pipeline'),
-  host: ENV.fetch('DB_HOST', 'localhost'),
-  port: ENV.fetch('DB_PORT', 5432),
-  password: ENV.fetch('DB_PASS', 'pipeline'),
-}
-
-
-DB = Sequel.connect(db_config)
+# Require plant stuff
+require_relative './src/init.rb'
 
 
 # Variable to keep track of whether we have already
