@@ -67,7 +67,7 @@ end
 ##
 # Route to get moisture readings for a plant
 #
-get '/api/plants/:id/temperature' do |id|
+get '/api/plants/:id/moisture' do |id|
   content_type :json
 
   plant = Plant[id]
