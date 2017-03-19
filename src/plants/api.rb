@@ -54,7 +54,11 @@ get '/api/plants/:id/temperature' do |id|
 
   plant = Plant[id]
   if plant
-    Plant[id].hourly_temperature.to_json
+    plant.hourly_temperature_dataset \
+      .order_by(Sequel.desc(:hour)) \
+      .limit(24 * 7) \
+      .all \
+      .to_json
   else
     halt 404, {
       error: true,
@@ -72,7 +76,11 @@ get '/api/plants/:id/moisture' do |id|
 
   plant = Plant[id]
   if plant
-    Plant[id].hourly_moisture.to_json
+    plant.hourly_moisture_dataset \
+      .order_by(Sequel.desc(:hour)) \
+      .limit(24 * 7) \
+      .all \
+      .to_json
   else
     halt 404, {
       error: true,
