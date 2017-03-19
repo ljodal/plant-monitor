@@ -62,3 +62,21 @@ get '/api/plants/:id/temperature' do |id|
     }.to_json
   end
 end
+
+
+##
+# Route to get moisture readings for a plant
+#
+get '/api/plants/:id/temperature' do |id|
+  content_type :json
+
+  plant = Plant[id]
+  if plant
+    Plant[id].hourly_moisture.to_json
+  else
+    halt 404, {
+      error: true,
+      message: 'No such plant',
+    }.to_json
+  end
+end

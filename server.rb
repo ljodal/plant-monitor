@@ -58,7 +58,10 @@ def insert(objects)
     when 'light'
       DB.call(:insert_light, params)
     else
-      puts "Unsupported metric type: #{o['type']}"
+      {
+        error: "Unknown metric type: #{o['type']}",
+        params: params,
+      }
     end
   end
 end
@@ -86,26 +89,4 @@ put '/api/metrics' do
     sql: insert(data),
     count: data.length,
   }.to_json
-end
-
-
-##
-# Get the hourly temperature of a sensor
-#
-get '/api/temperature/:id' do |id|
-  content_type :json
-
-  frequency = params.fetch('frequency', 'hourly')
-
-  data = case frequency
-         when 'hourly'
-           DB[:temperature_hourly]
-         else
-           halt 400, {
-             error: true,
-             message: "Unsupported frequency: #{params[:frequency]}",
-           }.to_json
-         end
-
-  data.select(:hour, :count, :value).all.to_json
 end
