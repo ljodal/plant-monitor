@@ -120,5 +120,4 @@ curl -u admin:secret http://localhost:4567/api/temperature/1
 
 ## TODO
 
- * Configurable username/password
  * Frontend
