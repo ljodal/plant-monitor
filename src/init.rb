@@ -12,4 +12,5 @@ db_config = {
 DB = Sequel.connect(db_config)
 
 # Require other files
+require_relative './auth/init'
 require_relative './plants/init'

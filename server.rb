@@ -34,7 +34,8 @@ end
 # Use basic auth through rack for authentication
 #
 use Rack::Auth::Basic do |username, password|
-  username == 'admin' && password == 'secret'
+  user = User.where(email: username).first
+  user && user.verify_password(password)
 end
 
 ##
