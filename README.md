@@ -5,17 +5,36 @@ A web based API to collect and aggregate metrics from plants
 
 ## Running with `docker-compose`
 
-Build and start the containers:
+Build the containers:
 
 ```shell
-docker-compose up --build
+docker-compose build --pull
 ```
 
-Run migrations (in another shell) after the database has started:
+Run migrations:
 
 ```shell
 docker-compose run --rm web rake sequel:migrate
 ```
+
+Create a user:
+
+```shell
+docker-compose run --rm web ./shell
+```
+
+```ruby
+u = User.new(email: 'admin')
+u.set_password('secret')
+u.save()
+```
+
+Start the service
+
+```shell
+docker-compose up
+```
+
 
 Everything should now be available on port `5000` on your machine.
 
@@ -46,6 +65,19 @@ docker run -p 0.0.0.0:5432:5432 --rm pipelinedb/pipelinedb
 ```shell
 bundle exec rake sequel:migrate
 ```
+
+### Create a user
+
+```shell
+bundle exec ./shell
+```
+
+```ruby
+u = User.new(email: 'admin')
+u.set_password('secret')
+u.save()
+```
+
 
 ### Start the server application
 

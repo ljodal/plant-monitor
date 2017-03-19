@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+# Set up the application
+require_relative './src/init'
+
+require 'pry'
+
+Pry.start
